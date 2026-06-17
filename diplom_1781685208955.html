@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diploma</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #525659; }
+#viewer { width: 100%; max-width: 900px; margin: 0 auto; }
+canvas { display: block; width: 100%; height: auto; margin-bottom: 2px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+</style>
+</head>
+<body>
+<div id="viewer"></div>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+pdfjsLib.getDocument('https://cdn.jsdelivr.net/gh/uzdip/generatePDF@main/diplom_1781685208955.pdf').promise.then(function(pdf) {
+  for (var i = 1; i <= pdf.numPages; i++) {
+    (function(pageNum) {
+      pdf.getPage(pageNum).then(function(page) {
+        var viewport = page.getViewport({scale: 1.5});
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        document.getElementById('viewer').appendChild(canvas);
+        page.render({canvasContext: ctx, viewport: viewport});
+      });
+    })(i);
+  }
+});
+</script>
+</body>
+</html>
